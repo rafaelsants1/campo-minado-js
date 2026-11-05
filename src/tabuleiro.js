@@ -4,8 +4,9 @@ function criarCelula() {
 
 const linhas = 8;
 const colunas = 8;
+const MINAS = 10;
 
-function criarTabuleiro() {
+export function criarTabuleiro() {
   const matriz = [];
 
   for (let i = 0; i < linhas; i++) {
@@ -17,5 +18,21 @@ function criarTabuleiro() {
   }
   return matriz;
 }
-const t = criarTabuleiro();
-console.log(t.length, t[0].length);
+
+export function posicionarMinas(tabuleiro, linhaInicial, colunaInicial) {
+  let minasColocadas = 0;
+
+  while (minasColocadas < MINAS) {
+    const linha = Math.floor(Math.random() * linhas);
+    const coluna = Math.floor(Math.random() * colunas);
+
+    if (
+      (linha === linhaInicial && coluna === colunaInicial) ||
+      tabuleiro[linha][coluna].temMina
+    ) {
+      continue;
+    }
+    tabuleiro[linha][coluna].temMina = true;
+    minasColocadas = minasColocadas + 1;
+  }
+}
