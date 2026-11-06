@@ -88,3 +88,12 @@ test("não quebra com entrada nula ou indefinida", () => {
   assert.equal(interpretarComando(null).valido, false);
   assert.equal(interpretarComando(undefined).valido, false);
 });
+
+test("reconhece o comando dica, com atalho", () => {
+  for (const texto of ["dica", "DICA", "d", " D "]) {
+    assert.deepEqual(interpretarComando(texto), {
+      valido: true,
+      acao: "dica",
+    });
+  }
+});
