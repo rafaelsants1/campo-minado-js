@@ -1,11 +1,8 @@
-// Constantes do jogo. Alterar aqui muda o jogo inteiro.
-
 export const LINHAS = 8;
 export const COLUNAS = 8;
 export const MINAS = 10;
 
-// Símbolos do tabuleiro. A cor nunca é a única informação: cada estado
-// tem um símbolo próprio.
+// Cada estado tem um símbolo próprio, então a cor nunca é a única pista.
 export const SIMBOLOS = {
   fechada: "■",
   vazia: "·",
@@ -13,7 +10,7 @@ export const SIMBOLOS = {
   bandeira: "⚑",
 };
 
-// Alternativa em ASCII puro, para terminais sem suporte a Unicode.
+// Para terminais que não mostram Unicode (use a flag --ascii).
 export const SIMBOLOS_ASCII = {
   fechada: "#",
   vazia: ".",
