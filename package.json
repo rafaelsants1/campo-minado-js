@@ -1,17 +1,16 @@
 {
   "name": "campo-minado",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Campo Minado 8x8 para jogar no terminal, em JavaScript puro (Node.js).",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "test": "node --test",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "test": "node --test"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "prompt-sync": "^4.2.0"
-  }
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["campo-minado", "minesweeper", "terminal", "nodejs"],
+  "license": "ISC"
 }
