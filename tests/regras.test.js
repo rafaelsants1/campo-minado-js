@@ -6,6 +6,7 @@ import {
   revelar,
   alternarBandeira,
   contarReveladas,
+  pedirDica,
   segundosDecorridos,
 } from "../src/regras.js";
 
@@ -202,4 +203,77 @@ test("segundosDecorridos conta da primeira jogada até o fim", () => {
 
   revelar(jogo, 3, 3, { agora: 6500 });
   assert.equal(segundosDecorridos(jogo, 999999), 5);
+});
+
+test("dica não funciona antes da primeira jogada", () => {
+  const jogo = criarJogo();
+
+  const resultado = pedirDica(jogo);
+
+  assert.equal(resultado.ok, false);
+  assert.ok(resultado.mensagem.length > 0);
+  assert.equal(jogo.dicas, 0);
+});
+
+test("dica abre uma casa segura e conta o uso", () => {
+  const jogo = criarJogo();
+  revelar(jogo, 0, 0, { posicoesFixas: ESPALHADAS });
+
+  // aleatorio = () => 0 escolhe a primeira casa segura fechada: [0][2]
+  const resultado = pedirDica(jogo, { aleatorio: () => 0 });
+
+  assert.deepEqual(resultado, { ok: true, linha: 0, coluna: 2 });
+  assert.equal(jogo.tabuleiro[0][2].revelada, true);
+  assert.equal(jogo.dicas, 1);
+});
+
+test("dica pula casas com bandeira", () => {
+  const jogo = criarJogo();
+  revelar(jogo, 0, 0, { posicoesFixas: ESPALHADAS });
+  alternarBandeira(jogo, 0, 2);
+
+  const resultado = pedirDica(jogo, { aleatorio: () => 0 });
+
+  assert.equal(resultado.ok, true);
+  assert.equal(jogo.tabuleiro[0][2].revelada, false);
+  assert.deepEqual([resultado.linha, resultado.coluna], [0, 3]);
+});
+
+test("dica nunca abre uma mina, mesmo pedida até acabar a partida", () => {
+  for (let partida = 0; partida < 100; partida++) {
+    const jogo = criarJogo();
+    revelar(jogo, 0, 0);
+    while (jogo.status === "jogando") {
+      const resultado = pedirDica(jogo);
+      assert.equal(resultado.ok, true);
+    }
+    assert.equal(jogo.status, "venceu");
+  }
+});
+
+test("a dica que abre a última casa segura dá a vitória", () => {
+  const jogo = criarJogo();
+  revelar(jogo, 0, 0, { posicoesFixas: ESPALHADAS });
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      const celula = jogo.tabuleiro[i][j];
+      if (!celula.temMina && !celula.revelada && !(i === 7 && j === 7)) {
+        revelar(jogo, i, j);
+      }
+    }
+  }
+  assert.equal(jogo.status, "jogando");
+
+  const resultado = pedirDica(jogo, { aleatorio: () => 0 });
+
+  assert.deepEqual([resultado.linha, resultado.coluna], [7, 7]);
+  assert.equal(jogo.status, "venceu");
+});
+
+test("dica depois do fim da partida devolve aviso", () => {
+  const jogo = criarJogo();
+  revelar(jogo, 0, 0, { posicoesFixas: ESPALHADAS });
+  revelar(jogo, 3, 3);
+
+  assert.equal(pedirDica(jogo).ok, false);
 });

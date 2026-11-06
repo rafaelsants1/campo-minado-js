@@ -16,6 +16,7 @@ export function criarJogo() {
     tabuleiro: criarTabuleiro(),
     status: "jogando", // "jogando" | "venceu" | "perdeu"
     bandeiras: 0,
+    dicas: 0,
     primeiraJogada: true,
     inicio: null,
     fim: null,
@@ -135,4 +136,37 @@ export function segundosDecorridos(jogo, agora = Date.now()) {
   }
   const ate = jogo.fim ?? agora;
   return Math.floor((ate - jogo.inicio) / 1000);
+}
+
+// Abre uma casa segura que ainda está fechada e sem bandeira. Não dá para
+// pedir antes da primeira jogada, porque as minas ainda não existem.
+export function pedirDica(jogo, { aleatorio = Math.random, agora } = {}) {
+  if (jogo.status !== "jogando") {
+    return { ok: false, mensagem: "A partida já terminou." };
+  }
+  if (jogo.primeiraJogada) {
+    return {
+      ok: false,
+      mensagem: "Abra uma casa antes: as minas só são sorteadas na primeira jogada.",
+    };
+  }
+
+  const seguras = [];
+  for (let i = 0; i < jogo.tabuleiro.length; i++) {
+    for (let j = 0; j < jogo.tabuleiro[i].length; j++) {
+      const celula = jogo.tabuleiro[i][j];
+      if (!celula.temMina && !celula.revelada && !celula.bandeira) {
+        seguras.push([i, j]);
+      }
+    }
+  }
+
+  if (seguras.length === 0) {
+    return { ok: false, mensagem: "Não sobrou casa segura sem bandeira." };
+  }
+
+  const [linha, coluna] = seguras[Math.floor(aleatorio() * seguras.length)];
+  revelar(jogo, linha, coluna, agora === undefined ? {} : { agora });
+  jogo.dicas = jogo.dicas + 1;
+  return { ok: true, linha, coluna };
 }

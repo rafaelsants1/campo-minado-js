@@ -20,6 +20,9 @@ export function interpretarComando(texto) {
   if (entrada === "AJUDA" || entrada === "?" || entrada === "H") {
     return { valido: true, acao: "ajuda" };
   }
+  if (entrada === "DICA" || entrada === "D") {
+    return { valido: true, acao: "dica" };
+  }
   if (entrada === "SAIR" || entrada === "Q") {
     return { valido: true, acao: "sair" };
   }
