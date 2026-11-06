@@ -72,3 +72,11 @@ export function contarVizinhas(tabuleiro, linha, coluna) {
 
   return total;
 }
+
+export function calcularVizinhas(tabuleiro) {
+  for (let i = 0; i < tabuleiro.length; i++) {
+    for (let j = 0; j < tabuleiro[i].length; j++) {
+      tabuleiro[i][j].vizinhas = contarVizinhas(tabuleiro, i, j);
+    }
+  }
+}
