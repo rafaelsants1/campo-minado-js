@@ -22,6 +22,10 @@ export function pintar(texto, cor) {
   return codigo + texto + RESET;
 }
 
+export const vermelho = (texto) => pintar(texto, "vermelho");
+export const verde = (texto) => pintar(texto, "verde");
+export const amarelo = (texto) => pintar(texto, "amarelo");
+
 const COR_NUMERO = {
   1: "azul",
   2: "verde",
