@@ -59,10 +59,14 @@ export function renderizarTabuleiro(tabuleiro, opcoes = {}) {
   return linhasDoTexto.join("\n");
 }
 
-export function renderizarStatus(jogo, agora = Date.now()) {
+export function renderizarStatus(jogo, agora = Date.now(), recorde = null) {
   const restantes = MINAS - jogo.bandeiras;
   const tempo = segundosDecorridos(jogo, agora);
-  return pintar(`Minas restantes: ${restantes}   Tempo: ${tempo}s`, "azul");
+  let texto = `Minas restantes: ${restantes}   Tempo: ${tempo}s`;
+  if (recorde !== null) {
+    texto = texto + `   Recorde: ${recorde}s`;
+  }
+  return pintar(texto, "azul");
 }
 
 export function textoTitulo() {
@@ -74,6 +78,7 @@ export function textoAjuda(simbolos = SIMBOLOS) {
     pintar("Comandos:", "azul"),
     "  r B3    abre a casa B3 (coluna B, linha 3)",
     "  b B3    põe ou tira a bandeira em B3",
+    "  dica    abre uma casa segura (a partida deixa de valer recorde)",
     "  ajuda   mostra esta lista",
     "  sair    encerra o jogo",
     "",
