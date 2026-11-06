@@ -3,20 +3,15 @@ import {
   posicionarMinas,
   calcularVizinhas,
 } from "./tabuleiro.js";
+import { renderizarTabuleiro } from "./render.js";
+import { SIMBOLOS, SIMBOLOS_ASCII } from "./config.js";
 
-const t = criarTabuleiro();
-console.log(t.length, t[0].length);
+const simbolos = process.argv.includes("--ascii") ? SIMBOLOS_ASCII : SIMBOLOS;
 
-posicionarMinas(t, 0, 0);
-calcularVizinhas(t);
-let total = 0;
+const tabuleiro = criarTabuleiro();
+posicionarMinas(tabuleiro, 0, 0);
+calcularVizinhas(tabuleiro);
 
-for (let i = 0; i < t.length; i++) {
-  for (let j = 0; j < t[i].length; j++) {
-    if (t[i][j].temMina) {
-      total = total + 1;
-    }
-  }
-}
-console.log(total);
-console.log(t[0][0].vizinhas);
+console.log(renderizarTabuleiro(tabuleiro, { simbolos }));
+console.log();
+console.log(renderizarTabuleiro(tabuleiro, { simbolos, mostrarMinas: true }));
