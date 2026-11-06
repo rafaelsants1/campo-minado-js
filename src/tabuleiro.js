@@ -1,7 +1,23 @@
 import { LINHAS, COLUNAS, MINAS } from "./config.js";
 
+// Os 8 passos possíveis a partir de uma célula: [linha, coluna].
+export const DIRECOES = [
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, -1],
+  [0, 1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+];
+
 function criarCelula() {
   return { temMina: false, revelada: false, bandeira: false, vizinhas: 0 };
+}
+
+export function dentroDoTabuleiro(linha, coluna) {
+  return linha >= 0 && linha < LINHAS && coluna >= 0 && coluna < COLUNAS;
 }
 
 export function criarTabuleiro() {
@@ -17,7 +33,21 @@ export function criarTabuleiro() {
   return matriz;
 }
 
-export function posicionarMinas(tabuleiro, linhaInicial, colunaInicial) {
+// Sorteia as minas fora da célula da primeira jogada. Nos testes dá para
+// passar posicoesFixas (lista de [linha, coluna]) e pular o sorteio.
+export function posicionarMinas(
+  tabuleiro,
+  linhaInicial,
+  colunaInicial,
+  posicoesFixas = null,
+) {
+  if (posicoesFixas !== null) {
+    for (const [linha, coluna] of posicoesFixas) {
+      tabuleiro[linha][coluna].temMina = true;
+    }
+    return;
+  }
+
   let minasColocadas = 0;
 
   while (minasColocadas < MINAS) {
@@ -36,30 +66,13 @@ export function posicionarMinas(tabuleiro, linhaInicial, colunaInicial) {
 }
 
 export function contarVizinhas(tabuleiro, linha, coluna) {
-  const direcoes = [
-    [-1, -1],
-    [-1, 0],
-    [-1, 1],
-    [0, -1],
-    [1, -1],
-    [1, 1],
-    [0, 1],
-    [1, 0],
-  ];
   let total = 0;
-  for (let i = 0; i < direcoes.length; i++) {
-    const deslocamentoLinha = direcoes[i][0];
-    const deslocamentoColuna = direcoes[i][1];
 
-    const linhaVizinha = deslocamentoLinha + linha;
-    const colunaVizinha = deslocamentoColuna + coluna;
+  for (const [deslocamentoLinha, deslocamentoColuna] of DIRECOES) {
+    const linhaVizinha = linha + deslocamentoLinha;
+    const colunaVizinha = coluna + deslocamentoColuna;
 
-    if (
-      linhaVizinha < 0 ||
-      linhaVizinha >= LINHAS ||
-      colunaVizinha < 0 ||
-      colunaVizinha >= COLUNAS
-    ) {
+    if (!dentroDoTabuleiro(linhaVizinha, colunaVizinha)) {
       continue;
     }
 
