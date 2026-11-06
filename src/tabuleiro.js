@@ -36,3 +36,39 @@ export function posicionarMinas(tabuleiro, linhaInicial, colunaInicial) {
     minasColocadas = minasColocadas + 1;
   }
 }
+
+export function contarVizinhas(tabuleiro, linha, coluna) {
+  const direcoes = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [1, -1],
+    [1, 1],
+    [0, 1],
+    [1, 0],
+  ];
+  let total = 0;
+  for (let i = 0; i < direcoes.length; i++) {
+    const deslocamentoLinha = direcoes[i][0];
+    const deslocamentoColuna = direcoes[i][1];
+
+    const linhaVizinha = deslocamentoLinha + linha;
+    const colunaVizinha = deslocamentoColuna + coluna;
+
+    if (
+      linhaVizinha < 0 ||
+      linhaVizinha >= linhas ||
+      colunaVizinha < 0 ||
+      colunaVizinha >= colunas
+    ) {
+      continue;
+    }
+
+    if (tabuleiro[linhaVizinha][colunaVizinha].temMina) {
+      total = total + 1;
+    }
+  }
+
+  return total;
+}
