@@ -1,17 +1,15 @@
+import { LINHAS, COLUNAS, MINAS } from "./config.js";
+
 function criarCelula() {
   return { temMina: false, revelada: false, bandeira: false, vizinhas: 0 };
 }
 
-const linhas = 8;
-const colunas = 8;
-const MINAS = 10;
-
 export function criarTabuleiro() {
   const matriz = [];
 
-  for (let i = 0; i < linhas; i++) {
+  for (let i = 0; i < LINHAS; i++) {
     const linhaVazia = [];
-    for (let j = 0; j < colunas; j++) {
+    for (let j = 0; j < COLUNAS; j++) {
       linhaVazia.push(criarCelula());
     }
     matriz.push(linhaVazia);
@@ -23,8 +21,8 @@ export function posicionarMinas(tabuleiro, linhaInicial, colunaInicial) {
   let minasColocadas = 0;
 
   while (minasColocadas < MINAS) {
-    const linha = Math.floor(Math.random() * linhas);
-    const coluna = Math.floor(Math.random() * colunas);
+    const linha = Math.floor(Math.random() * LINHAS);
+    const coluna = Math.floor(Math.random() * COLUNAS);
 
     if (
       (linha === linhaInicial && coluna === colunaInicial) ||
@@ -58,9 +56,9 @@ export function contarVizinhas(tabuleiro, linha, coluna) {
 
     if (
       linhaVizinha < 0 ||
-      linhaVizinha >= linhas ||
+      linhaVizinha >= LINHAS ||
       colunaVizinha < 0 ||
-      colunaVizinha >= colunas
+      colunaVizinha >= COLUNAS
     ) {
       continue;
     }
